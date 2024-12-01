@@ -116,6 +116,7 @@ public class GameController : MonoBehaviour
         levelText.text = "level " + level.ToString();
     }
 
+    //Set the level number and determine if the level is a boss level. And the timer to handle level if end.
     void LevelHandle()
     {
         if (!isGameOver && isGameInProgress)
@@ -142,6 +143,7 @@ public class GameController : MonoBehaviour
         bossLevelIcon.SetActive(isBossLevel);
     }
 
+    //Press esc to pause or continue and show the state panel for p1 and p2
     void StatePanel()
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !isGameOver && isGameInProgress)
@@ -163,6 +165,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    //Game start ,level end after and levle start before will show this panel
     void PreparePanel()
     {
         levelCountDownTimer = 0;
@@ -172,6 +175,7 @@ public class GameController : MonoBehaviour
         preparePanel.SetActive(true);
     }
 
+    //Player dead handle
     void GameOver()
     {
         if (player1 != null && player2 != null)

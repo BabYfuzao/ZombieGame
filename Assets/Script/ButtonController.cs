@@ -61,7 +61,7 @@ public class ButtonController : MonoBehaviour
         if (availableItems.Count == 0)
         {
             resultText.text = "No items available to pull!";
-            return; // 如果沒有可抽取的物品，則返回
+            return;
         }
 
         int randomIndex = Random.Range(0, availableItems.Count);
@@ -79,35 +79,34 @@ public class ButtonController : MonoBehaviour
     {
         List<string> availableItems = new List<string>();
 
-        // 根據當前數值更新可抽取的物品列表
-        if (player.attackPower < 100) // 假設攻擊力上限為100
+        if (player.attackPower < 100)
             availableItems.Add("Attack Power +5");
 
-        if (player.slashCD > 1) // 假設攻擊冷卻時間下限為1
+        if (player.slashCD > 1)
             availableItems.Add("Slash Cooldown -1");
 
-        if (player.shootCD > 1) // 假設攻擊冷卻時間下限為1
+        if (player.shootCD > 1)
             availableItems.Add("Shoot Cooldown -1");
 
-        if (player.maxHP < 200) // 假設最大生命值上限為200
+        if (player.maxHP < 200)
             availableItems.Add("Max HP +20");
 
-        if (player.remainingHP < player.maxHP) // 檢查當前生命值是否低於最大生命值
+        if (player.remainingHP < player.maxHP)
             availableItems.Add("Remaining HP +15");
 
-        if (player.regenHPAmount < 20) // 假設生命值再生量上限為20
+        if (player.regenHPAmount < 20)
             availableItems.Add("HP Regeneration +5");
 
-        if (player.scale < 5.0f) // 假設比例上限為5.0
+        if (player.scale < 5.0f)
             availableItems.Add("Scale +0.1");
 
-        if (player.moveSpeed < 10) // 假設移動速度上限為10
+        if (player.moveSpeed < 10)
             availableItems.Add("Move Speed +2");
 
-        if (player.slashRadius < 5) // 假設劍的範圍上限為5
+        if (player.slashRadius < 5)
             availableItems.Add("Slash Radius +1");
 
-        if (player.shootRadius < 5) // 假設射擊範圍上限為5
+        if (player.shootRadius < 5)
             availableItems.Add("Shoot Radius +1");
 
         return availableItems;

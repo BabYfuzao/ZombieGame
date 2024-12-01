@@ -46,8 +46,8 @@ public class ZombieSpawner : MonoBehaviour
         switch (currentLevel)
         {
             case 1:
-                zombieSpawnCount = 12;
-                spawnDelay = 1f;
+                zombieSpawnCount = 2;
+                spawnDelay = 5f;
                 break;
             case 2:
                 zombieSpawnCount = 4;
