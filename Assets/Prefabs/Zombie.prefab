@@ -171,7 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 779358eaaaed5b349bf77e501ec1349d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hP: 10
+  isBoss: 0
+  hP: 1
   moveSpeed: 0
   moveSpeedInFast: 5
   moveSpeedInSlow: 1

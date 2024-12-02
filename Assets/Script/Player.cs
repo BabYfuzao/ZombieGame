@@ -7,8 +7,6 @@ public class Player : MonoBehaviour
 {
     public int playerId;
 
-    public bool isPlayerDead;
-
     public int zombieKillCount;
 
     public int coinCount;
@@ -31,13 +29,13 @@ public class Player : MonoBehaviour
     public bool isSword = false;
     public GameObject swordPrefab;
     private GameObject swordGameObject;
-    public float slashRadius = 1.5f;
+    public float slashRadius = 1f;
     public float slashCDTimer = 0f;
-    public float slashCD = 0.5f;
+    public float slashCD = 2f;
 
     public bool isShooter = false;
     public GameObject bulletPrefab;
-    public float shootRadius = 10f;
+    public float shootRadius = 5f;
     public float shootCDTimer = 0f;
     public float shootCD = 2f;
 
@@ -75,8 +73,15 @@ public class Player : MonoBehaviour
         {
             remainingHP = 0;
             TextHandle();
+            StartCoroutine(DestroyPlayerAfterDelay(5f));
             this.enabled = false;
         }
+    }
+
+    private IEnumerator DestroyPlayerAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -86,10 +91,6 @@ public class Player : MonoBehaviour
             if (collision.gameObject.CompareTag("Zombie"))
             {
                 remainingHP--;
-                if (isMuscle)
-                {
-                    Destroy(collision.gameObject);
-                }
             }
 
             else if (collision.gameObject.CompareTag("Coin"))
@@ -128,6 +129,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Instantiate SwordPrefab with player around to attack zombie
     void Sword()
     {
         if (slashCDTimer < slashCD)
@@ -154,6 +156,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Instantiate BulletPrefab to shoot to zombie
     void Shoot()
     {
         if (shootCDTimer < shootCD)
@@ -170,6 +173,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Determine if zombie in shoot radius
     bool IsZombieInRange()
     {
         GameObject[] zombies = GameObject.FindGameObjectsWithTag("Zombie");

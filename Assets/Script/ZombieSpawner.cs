@@ -14,7 +14,6 @@ public class ZombieSpawner : MonoBehaviour
 
     void Start()
     {
-        SetSpawnParameters();
         StartCoroutine(SpawnZombies());
     }
 
@@ -39,6 +38,7 @@ public class ZombieSpawner : MonoBehaviour
         }
     }
 
+    //Difficulty in every level
     private void SetSpawnParameters()
     {
         int currentLevel = GameController.instance.level;
@@ -50,48 +50,48 @@ public class ZombieSpawner : MonoBehaviour
                 spawnDelay = 5f;
                 break;
             case 2:
-                zombieSpawnCount = 4;
-                spawnDelay = 4f;
+                zombieSpawnCount = 3;
+                spawnDelay = 5f;
                 break;
             case 3:
-                zombieSpawnCount = 8;
-                spawnDelay = 6f;
+                zombieSpawnCount = 4;
+                spawnDelay = 5f;
                 break;
             case 4:
-                zombieSpawnCount = 1;
-                spawnDelay = 10f;
+                zombieSpawnCount = 5;
+                spawnDelay = 5f;
                 break;
             case 5:
-                zombieSpawnCount = 2;
-                spawnDelay = 8f;
+                zombieSpawnCount = 6;
+                spawnDelay = 4f;
                 break;
             case 6:
-                zombieSpawnCount = 3;
-                spawnDelay = 6f;
+                zombieSpawnCount = 7;
+                spawnDelay = 4f;
                 break;
             case 7:
-                zombieSpawnCount = 1;
-                spawnDelay = 10f;
+                zombieSpawnCount = 8;
+                spawnDelay = 4f;
                 break;
             case 8:
-                zombieSpawnCount = 2;
-                spawnDelay = 8f;
+                zombieSpawnCount = 9;
+                spawnDelay = 4f;
                 break;
             case 9:
-                zombieSpawnCount = 3;
-                spawnDelay = 6f;
+                zombieSpawnCount = 10;
+                spawnDelay = 3f;
                 break;
             case 10:
-                zombieSpawnCount = 1;
-                spawnDelay = 10f;
+                zombieSpawnCount = 11;
+                spawnDelay = 3f;
                 break;
             case 11:
-                zombieSpawnCount = 2;
-                spawnDelay = 8f;
+                zombieSpawnCount = 12;
+                spawnDelay = 3f;
                 break;
             case 12:
-                zombieSpawnCount = 12;
-                spawnDelay = 0.1f;
+                zombieSpawnCount = 13;
+                spawnDelay = 3f;
                 break;
             default:
                 zombieSpawnCount = 0;

@@ -41,7 +41,6 @@ public class GameController : MonoBehaviour
     void Awake()
     {
         instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -127,6 +126,7 @@ public class GameController : MonoBehaviour
             }
             else if (levelCountDownTimer <= 0)
             {
+                DestroyAllZombie();
                 level++;
                 if (level % 4 == 0)
                 {
@@ -141,6 +141,15 @@ public class GameController : MonoBehaviour
             }
         }
         bossLevelIcon.SetActive(isBossLevel);
+    }
+
+    void DestroyAllZombie()
+    {
+        GameObject[] zombies = GameObject.FindGameObjectsWithTag("Zombie");
+        foreach (GameObject zombie in zombies)
+        {
+            Destroy(zombie);
+        }
     }
 
     //Press esc to pause or continue and show the state panel for p1 and p2

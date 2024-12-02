@@ -103,26 +103,26 @@ MonoBehaviour:
   isPlayerDead: 0
   zombieKillCount: 0
   coinCount: 0
-  attackPower: 12
+  attackPower: 1
   remainingHP: 0
   maxHP: 5
   playerHPText: {fileID: 0}
   regenHPTimer: 0
-  regenHPCD: 3
+  regenHPCD: 20
   regenHPAmount: 1
   scale: 1
-  moveSpeed: 5
+  moveSpeed: 3
   isMuscle: 0
   isSword: 0
   swordPrefab: {fileID: 0}
-  slashRadius: 1.5
+  slashRadius: 1
   slashCDTimer: 0
-  slashCD: 0.5
+  slashCD: 1
   isShooter: 0
   bulletPrefab: {fileID: 0}
-  shootRadius: 10
+  shootRadius: 5
   shootCDTimer: 0
-  shootCD: 2
+  shootCD: 1
 --- !u!61 &5613499600192341502
 BoxCollider2D:
   m_ObjectHideFlags: 0

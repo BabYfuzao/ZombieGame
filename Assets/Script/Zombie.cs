@@ -10,6 +10,8 @@ public class Zombie : MonoBehaviour
     private Player player1;
     private Player player2;
 
+    public bool isBoss = false;
+
     public int hP;
 
     public float moveSpeed;
@@ -48,18 +50,21 @@ public class Zombie : MonoBehaviour
     {
         ChangeIntervalTimer();
         FindClosestPlayer();
-        MoveToPlayer();
+        if (playerTransform != null)
+        {
+            MoveToPlayer();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Player attackingPlayer = null;
 
-        if (collision.gameObject.CompareTag("Player1Sword") || collision.gameObject.CompareTag("Player1Bullet"))
+        if (collision.gameObject.CompareTag("Player1Sword") || collision.gameObject.CompareTag("Player1Bullet") || (collision.gameObject.CompareTag("Player1") && player1.isMuscle))
         {
             attackingPlayer = player1;
         }
-        else if (collision.gameObject.CompareTag("Player2Sword") || collision.gameObject.CompareTag("Player2Bullet"))
+        else if (collision.gameObject.CompareTag("Player2Sword") || collision.gameObject.CompareTag("Player2Bullet") || (collision.gameObject.CompareTag("Player2") && player2.isMuscle))
         {
             attackingPlayer = player2;
         }
@@ -104,20 +109,23 @@ public class Zombie : MonoBehaviour
 
     private void FindClosestPlayer()
     {
-        if (player1 != null || player2 != null)
+        if (player1 != null && player1.gameObject.activeSelf && player2 != null && player2.gameObject.activeSelf)
         {
             float distanceToPlayer1 = Vector2.Distance(transform.position, player1.transform.position);
             float distanceToPlayer2 = Vector2.Distance(transform.position, player2.transform.position);
-
             playerTransform = distanceToPlayer1 < distanceToPlayer2 ? player1.transform : player2.transform;
         }
-        else if (player1 != null)
+        else if (player1 != null && player1.gameObject.activeSelf)
         {
             playerTransform = player1.transform;
         }
-        else if (player2 != null)
+        else if (player2 != null && player2.gameObject.activeSelf)
         {
             playerTransform = player2.transform;
+        }
+        else
+        {
+            playerTransform = null;
         }
     }
 

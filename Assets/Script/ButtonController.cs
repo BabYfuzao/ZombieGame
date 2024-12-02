@@ -39,7 +39,7 @@ public class ButtonController : MonoBehaviour
         Time.timeScale = 1;
         GameController.instance.preparePanel.SetActive(false);
 
-        GameController.instance.levelCountDownTimer = GameController.instance.isBossLevel ? 61f : 121f;
+        GameController.instance.levelCountDownTimer = GameController.instance.isBossLevel ? 25f : 21f;
 
         GameController.instance.ShowUI();
     }
@@ -79,34 +79,34 @@ public class ButtonController : MonoBehaviour
     {
         List<string> availableItems = new List<string>();
 
-        if (player.attackPower < 100)
-            availableItems.Add("Attack Power +5");
+        if (player.attackPower < 10)
+            availableItems.Add("Attack Power +1");
 
-        if (player.slashCD > 1)
-            availableItems.Add("Slash Cooldown -1");
+        if (player.slashCD > 0.1f)
+            availableItems.Add("Slash Cooldown -0.1");
 
-        if (player.shootCD > 1)
-            availableItems.Add("Shoot Cooldown -1");
+        if (player.shootCD > 0.1f)
+            availableItems.Add("Shoot Cooldown -0.1");
 
-        if (player.maxHP < 200)
-            availableItems.Add("Max HP +20");
+        if (player.maxHP < 20)
+            availableItems.Add("Max HP +1");
 
-        if (player.remainingHP < player.maxHP)
-            availableItems.Add("Remaining HP +15");
+        if (player.regenHPAmount < 5)
+            availableItems.Add("HP Regeneration +1");
 
-        if (player.regenHPAmount < 20)
-            availableItems.Add("HP Regeneration +5");
+        if (player.regenHPCD < 10f)
+            availableItems.Add("HP RegenCD - 0.5");
 
-        if (player.scale < 5.0f)
+        if (player.scale < 8f)
             availableItems.Add("Scale +0.1");
 
-        if (player.moveSpeed < 10)
-            availableItems.Add("Move Speed +2");
+        if (player.moveSpeed < 20)
+            availableItems.Add("Move Speed +1");
 
-        if (player.slashRadius < 5)
-            availableItems.Add("Slash Radius +1");
+        if (player.slashRadius < 6)
+            availableItems.Add("Slash Radius +0.5");
 
-        if (player.shootRadius < 5)
+        if (player.shootRadius < 12)
             availableItems.Add("Shoot Radius +1");
 
         return availableItems;
@@ -116,33 +116,36 @@ public class ButtonController : MonoBehaviour
     {
         switch (item)
         {
-            case "Attack Power +5":
-                player.attackPower += 5;
+            case "Attack Power +1":
+                player.attackPower += 1;
                 break;
-            case "Slash Cooldown -1":
-                player.slashCD = Mathf.Max(0.1f, player.slashCD - 1f);
+            case "Slash Cooldown -0.05":
+                player.slashCD -= 0.05f;
                 break;
-            case "Shoot Cooldown -1":
-                player.shootCD = Mathf.Max(0.1f, player.shootCD - 1f);
+            case "Shoot Cooldown -0.05":
+                player.shootCD -= 0.05f;
                 break;
-            case "Max HP +20":
-                player.maxHP += 20;
-                player.remainingHP += 20;
+            case "Max HP +1":
+                player.maxHP += 1;
+                player.remainingHP += 1;
                 break;
-            case "HP Regeneration +5":
-                player.regenHPAmount += 5;
+            case "HP Regeneration +1":
+                player.regenHPAmount += 1;
+                break;
+            case "HP RegenCD - 0.5":
+                player.regenHPCD -= 0.5f;
                 break;
             case "Scale +0.1":
                 player.scale += 0.1f;
                 break;
-            case "Move Speed +2":
-                player.moveSpeed += 2;
+            case "Move Speed +0.1":
+                player.moveSpeed += 0.1f;
                 break;
-            case "Slash Radius +1":
-                player.slashRadius += 1;
+            case "Slash Radius +0.1":
+                player.slashRadius += 0.1f;
                 break;
-            case "Shoot Radius +1":
-                player.shootRadius += 1;
+            case "Shoot Radius +0.5":
+                player.shootRadius += 0.5f;
                 break;
             default:
                 break;
