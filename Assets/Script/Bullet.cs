@@ -6,6 +6,9 @@ public class Bullet : MonoBehaviour
 {
     private Transform targetZombie;
 
+    public bool bomb;
+    public GameObject explosionPrefab;
+
     void Update()
     {
         FindClosestZombie();
@@ -19,6 +22,11 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Zombie"))
         {
+            if (bomb)
+            {
+                GameObject explosionObject = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+                Destroy(explosionObject, 0.5f);
+            }
             Destroy(gameObject);
         }
     }

@@ -10,7 +10,17 @@ public class ButtonController : MonoBehaviour
     private Player player1;
     private Player player2;
 
-    public TextMeshProUGUI resultText;
+    private GameObject panelTextHandleObject;
+    private PanelTextHandle panelTextHandle;
+
+    public GameObject player1MuscleChoiceButton;
+    public GameObject player1SwordChoiceButton;
+    public GameObject player1ShooterChoiceButton;
+    public GameObject player2MuscleChoiceButton;
+    public GameObject player2SwordChoiceButton;
+    public GameObject player2ShooterChoiceButton;
+
+    public GameObject gameStartButton;
 
     void Start()
     {
@@ -26,6 +36,9 @@ public class ButtonController : MonoBehaviour
         {
             player2 = playerGameObject2.GetComponent<Player>();
         }
+
+        panelTextHandleObject = GameObject.Find("PanelTextHandle");
+        panelTextHandle = panelTextHandleObject.GetComponent<PanelTextHandle>();
     }
 
     void Update()
@@ -33,122 +46,433 @@ public class ButtonController : MonoBehaviour
         
     }
 
-    public void StartLevel()
+    //Start Panel
+    //GameStart
+    public void MuscleChoiceButtonForPlayer1()
     {
-        GameController.instance.isGameInProgress = true;
-        Time.timeScale = 1;
-        GameController.instance.preparePanel.SetActive(false);
+        player1.isMuscle = true;
 
-        GameController.instance.levelCountDownTimer = GameController.instance.isBossLevel ? 25f : 21f;
+        player1MuscleChoiceButton.SetActive(false);
+        player1SwordChoiceButton.SetActive(false);
+        player1ShooterChoiceButton.SetActive(false);
 
-        GameController.instance.ShowUI();
+        GameController.instance.isPlayer1Choose = true;
+
+        GameController.instance.FirstChoice(player1);
+
+        ShowGameStartButton();
     }
 
-    public void PullForPlayer1()
+    public void SwordChoiceButtonForPlayer1()
     {
-        Pull(player1);
+        player1.isSword = true;
+
+        player1MuscleChoiceButton.SetActive(false);
+        player1SwordChoiceButton.SetActive(false);
+        player1ShooterChoiceButton.SetActive(false);
+
+        GameController.instance.isPlayer1Choose = true;
+
+        GameController.instance.FirstChoice(player1);
+
+        ShowGameStartButton();
     }
 
-    public void PullForPlayer2()
+    public void ShooterChoiceButtonForPlayer1()
     {
-        Pull(player2);
+        player1.isShooter = true;
+
+        player1MuscleChoiceButton.SetActive(false);
+        player1SwordChoiceButton.SetActive(false);
+        player1ShooterChoiceButton.SetActive(false);
+
+        GameController.instance.isPlayer1Choose = true;
+
+        GameController.instance.FirstChoice(player1);
+
+        ShowGameStartButton();
     }
 
-    public void Pull(Player player)
+    public void MuscleChoiceButtonForPlayer2()
     {
-        List<string> availableItems = UpdateAvailableItems(player);
+        player2.isMuscle = true;
 
-        if (availableItems.Count == 0)
+        player2MuscleChoiceButton.SetActive(false);
+        player2SwordChoiceButton.SetActive(false);
+        player2ShooterChoiceButton.SetActive(false);
+
+        GameController.instance.isPlayer2Choose = true;
+
+        GameController.instance.FirstChoice(player2);
+
+        ShowGameStartButton();
+    }
+
+    public void SwordChoiceButtonForPlayer2()
+    {
+        player2.isSword = true;
+
+        player2MuscleChoiceButton.SetActive(false);
+        player2SwordChoiceButton.SetActive(false);
+        player2ShooterChoiceButton.SetActive(false);
+
+        GameController.instance.isPlayer2Choose = true;
+
+        GameController.instance.FirstChoice(player2);
+
+        ShowGameStartButton();
+    }
+
+    public void ShooterChoiceButtonForPlayer2()
+    {
+        player2.isShooter = true;
+
+        player2MuscleChoiceButton.SetActive(false);
+        player2SwordChoiceButton.SetActive(false);
+        player2ShooterChoiceButton.SetActive(false);
+
+        GameController.instance.isPlayer2Choose = true;
+
+        GameController.instance.FirstChoice(player2);
+
+        ShowGameStartButton();
+    }
+
+    void ShowGameStartButton()
+    {
+        if (GameController.instance.isPlayer1Choose && GameController.instance.isPlayer2Choose)
         {
-            resultText.text = "No items available to pull!";
-            return;
+            gameStartButton.SetActive(true);
         }
-
-        int randomIndex = Random.Range(0, availableItems.Count);
-        string selectedItem = availableItems[randomIndex];
-
-        //Result display
-        resultText.text = $"You pulled: {selectedItem}";
-
-        //Data get
-        ApplyItemEffect(player, selectedItem);
-
     }
 
-    private List<string> UpdateAvailableItems(Player player)
+    public void GameStartButton()
     {
-        List<string> availableItems = new List<string>();
-
-        if (player.attackPower < 10)
-            availableItems.Add("Attack Power +1");
-
-        if (player.slashCD > 0.1f)
-            availableItems.Add("Slash Cooldown -0.1");
-
-        if (player.shootCD > 0.1f)
-            availableItems.Add("Shoot Cooldown -0.1");
-
-        if (player.maxHP < 20)
-            availableItems.Add("Max HP +1");
-
-        if (player.regenHPAmount < 5)
-            availableItems.Add("HP Regeneration +1");
-
-        if (player.regenHPCD < 10f)
-            availableItems.Add("HP RegenCD - 0.5");
-
-        if (player.scale < 8f)
-            availableItems.Add("Scale +0.1");
-
-        if (player.moveSpeed < 20)
-            availableItems.Add("Move Speed +1");
-
-        if (player.slashRadius < 6)
-            availableItems.Add("Slash Radius +0.5");
-
-        if (player.shootRadius < 12)
-            availableItems.Add("Shoot Radius +1");
-
-        return availableItems;
+        GameController.instance.GameStart();
     }
 
-    private void ApplyItemEffect(Player player, string item)
+    //Game in progress
+    public void StatePanel()
     {
-        switch (item)
+        GameController.instance.StatePanel();
+    }
+
+    public void NextLevel()
+    {
+        GameController.instance.NextLevel();
+    }
+
+    private void UpdateResultTextForPlayer1(string message)
+    {
+        panelTextHandle.resultForPlayer1Text.text = message;
+    }
+
+    private void UpdateResultTextForPlayer2(string message)
+    {
+        panelTextHandle.resultForPlayer2Text.text = message;
+    }
+
+    // Player1
+    // Normal
+    public void MaxHPBuyPlayer1()
+    {
+        if (player1.coinCount >= 10 && player1.maxHP < 50)
         {
-            case "Attack Power +1":
-                player.attackPower += 1;
-                break;
-            case "Slash Cooldown -0.05":
-                player.slashCD -= 0.05f;
-                break;
-            case "Shoot Cooldown -0.05":
-                player.shootCD -= 0.05f;
-                break;
-            case "Max HP +1":
-                player.maxHP += 1;
-                player.remainingHP += 1;
-                break;
-            case "HP Regeneration +1":
-                player.regenHPAmount += 1;
-                break;
-            case "HP RegenCD - 0.5":
-                player.regenHPCD -= 0.5f;
-                break;
-            case "Scale +0.1":
-                player.scale += 0.1f;
-                break;
-            case "Move Speed +0.1":
-                player.moveSpeed += 0.1f;
-                break;
-            case "Slash Radius +0.1":
-                player.slashRadius += 0.1f;
-                break;
-            case "Shoot Radius +0.5":
-                player.shootRadius += 0.5f;
-                break;
-            default:
-                break;
+            player1.maxHP++;
+            player1.remainingHP++;
+            player1.coinCount -= 10;
+
+            UpdateResultTextForPlayer1($"Player1 HP Max +1. Current HP Max: {player1.maxHP}");
         }
+        else if (player1.coinCount < 10)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough coins. Current HP Max: {player1.maxHP}");
+        }
+        else if (player1.maxHP >= 50)
+        {
+            UpdateResultTextForPlayer1($"You have reached maximum HP Max. Current HP Max: {player1.maxHP}");
+        }
+    }
+
+    public void ReganHPSpeedBuyPlayer1()
+    {
+        if (player1.coinCount >= 5*GameController.instance.level && player1.regenHPCD > 0.5)
+        {
+            player1.regenHPCD -= 0.1f;
+            player1.coinCount -= 10;
+
+            UpdateResultTextForPlayer1($"HP Regen CD -0.1s. Current HP Regen CD: {player1.regenHPCD} s");
+        }
+        else if (player1.coinCount < 10)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough coins. Current Regen HP CD: {player1.regenHPCD} s");
+        }
+        else
+        {
+            UpdateResultTextForPlayer1($"Cannot reduce CD HP Regen further. Current Regen HP CD: {player1.regenHPCD} s");
+        }
+    }
+
+    public void AttackPowerBuyPlayer1()
+    {
+        if (player1.coinCount >= 50 && player1.attackPower < 6)
+        {
+            player1.attackPower++;
+            player1.coinCount -= 50;
+
+            UpdateResultTextForPlayer1($"Player1 Attack Power +1. Current Attack Power: {player1.attackPower}");
+        }
+        else if (player1.coinCount < 50)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough coins. Current Attack Power: {player1.attackPower}");
+        }
+        else if (player1.attackPower >= 6)
+        {
+            UpdateResultTextForPlayer1($"You have reached maximum Attack Power. Current Attack Power: {player1.attackPower}");
+        }
+    }
+
+    // Sword
+    public void SwordBuyPlayer1()
+    {
+        if (player1.virusCount >= 1 && !player1.isSword)
+        {
+            player1.isSword = true;
+            player1.virusCount--;
+
+            UpdateResultTextForPlayer1("Sword unlocked!");
+        }
+        else if (player1.virusCount < 1)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough virus.");
+        }
+        else if (player1.isSword)
+        {
+            UpdateResultTextForPlayer1("You already unlocked Sword.");
+        }
+    }
+
+    public void SlashRadiusBuyPlayer1()
+    {
+        if (player1.coinCount >= 10 && player1.isSword && player1.slashRadius < 8f)
+        {
+            player1.slashRadius += 0.1f;
+            player1.coinCount -= 10;
+
+            UpdateResultTextForPlayer1($"Slash Radius +0.1. Current Slash Radius: {player1.slashRadius}");
+        }
+        else if (player1.coinCount < 10)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough coins. Current Slash Radius: {player1.slashRadius}");
+        }
+        else if (player1.slashRadius > 8f)
+        {
+            UpdateResultTextForPlayer1($"You have reached maximum Slash Radius. Current Slash Radius: {player1.slashRadius}");
+        }
+    }
+
+    public void SwordSkillBuyPlayer1()
+    {
+        if (player1.virusCount >= 1 && player1.isSword && !player1.swordSkill)
+        {
+            player1.swordSkill = true;
+            player1.virusCount--;
+
+            UpdateResultTextForPlayer1("Sword skill unlocked!");
+        }
+        else if (player1.virusCount < 1)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough virus.");
+        }
+        else if (player1.swordSkill)
+        {
+            UpdateResultTextForPlayer1("You already unlocked Sword skill.");
+        }
+    }
+
+    // Shooter
+    public void ShooterBuyPlayer1()
+    {
+        if (player1.virusCount >= 1 && !player1.isShooter)
+        {
+            player1.isShooter = true;
+            player1.virusCount--;
+
+            UpdateResultTextForPlayer1("Shooter unlocked!");
+        }
+        else if (player1.virusCount < 1)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough virus.");
+        }
+        else
+        {
+            UpdateResultTextForPlayer1("You already unlocked Shooter.");
+        }
+    }
+
+    public void ShootCDBuyPlayer1()
+    {
+        if (player1.coinCount >= 10 && player1.isShooter && player1.shootCD > 0.1f)
+        {
+            player1.shootCD -= 0.05f;
+            player1.coinCount -= 10;
+
+            UpdateResultTextForPlayer1($"Shoot CD -0.05s. Current Shoot CD: {player1.shootCD}");
+        }
+        else if (player1.coinCount < 10)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough coins. Current Shoot CD: {player1.shootCD}");
+        }
+        else
+        {
+            UpdateResultTextForPlayer1($"Cannot reduce Shoot CD further. Current Shoot CD: {player1.shootCD}");
+        }
+    }
+
+    public void ShooterSkillBuyPlayer1()
+    {
+        if (player1.virusCount >= 1 && player1.isShooter && !player1.shooterSkill)
+        {
+            player1.shooterSkill = true;
+            player1.virusCount--;
+
+            UpdateResultTextForPlayer1("Shooter skill unlocked!");
+        }
+        else if (player1.virusCount < 1)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough virus.");
+        }
+        else
+        {
+            UpdateResultTextForPlayer1("You already unlocked Shooter skill.");
+        }
+    }
+
+    // Muscle
+    public void MuscleBuyPlayer1()
+    {
+        if (player1.virusCount >= 1 && !player1.isMuscle)
+        {
+            player1.isMuscle = true;
+            player1.virusCount--;
+
+            UpdateResultTextForPlayer1("Muscle unlocked!");
+        }
+        else if (player1.virusCount < 1)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough virus.");
+        }
+        else
+        {
+            UpdateResultTextForPlayer1("You already unlocked Muscle.");
+        }
+    }
+
+    public void MoveSpeedBuyPlayer1()
+    {
+        if (player1.coinCount >= 10 && player1.isMuscle && player1.moveSpeed < 0.5f)
+        {
+            player1.moveSpeed += 0.1f;
+            player1.coinCount -= 10;
+
+            UpdateResultTextForPlayer1($"Move speed +0.1. Current Move Speed: {player1.moveSpeed}");
+        }
+        else if (player1.coinCount < 10)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough coins. Current Move Speed: {player1.moveSpeed}");
+        }
+        else
+        {
+            UpdateResultTextForPlayer1($"You have reached maximum Move Speed. Current Move Speed: {player1.moveSpeed}");
+        }
+    }
+
+    public void MuscleSkillBuyPlayer1()
+    {
+        if (player1.virusCount >= 1 && player1.isMuscle && !player1.muscleSkill)
+        {
+            player1.muscleSkill = true;
+            player1.virusCount--;
+
+            UpdateResultTextForPlayer1("Muscle skill unlocked!");
+        }
+        else if (player1.virusCount < 1)
+        {
+            UpdateResultTextForPlayer1($"You don't have enough virus.");
+        }
+        else
+        {
+            UpdateResultTextForPlayer1("You already unlocked Muscle skill.");
+        }
+    }
+
+    // Player2
+    // Normal
+    public void MaxHPBuyPlayer2()
+    {
+        if (player2.coinCount >= 1)
+        {
+            player2.maxHP++;
+            player2.remainingHP++;
+            player2.coinCount--;
+        }
+    }
+
+    public void ReganHPSpeedBuyPlayer2()
+    {
+        // Implement logic for Player 2's HP regeneration speed purchase
+    }
+
+    public void AttackPowerBuyPlayer2()
+    {
+        // Implement logic for Player 2's attack power purchase
+    }
+
+    // Sword
+    public void SwordBuyPlayer2()
+    {
+        // Implement logic for Player 2's sword purchase
+    }
+
+    public void SlashRadiusBuyPlayer2()
+    {
+        // Implement logic for Player 2's sword radius purchase
+    }
+
+    public void SwordSkillBuyPlayer2()
+    {
+        // Implement logic for Player 2's sword skill purchase
+    }
+
+    // Shooter
+    public void ShooterBuyPlayer2()
+    {
+        // Implement logic for Player 2's shooter purchase
+    }
+
+    public void ShootCDBuyPlayer2()
+    {
+        // Implement logic for Player 2's shoot cooldown purchase
+    }
+
+    public void ShooterSkillBuyPlayer2()
+    {
+        // Implement logic for Player 2's shooter skill purchase
+    }
+
+    // Muscle
+    public void MuscleBuyPlayer2()
+    {
+        // Implement logic for Player 2's muscle purchase
+    }
+
+    public void MoveSpeedBuyPlayer2()
+    {
+        // Implement logic for Player 2's move speed purchase
+    }
+
+    public void MuscleSkillBuyPlayer2()
+    {
+        // Implement logic for Player 2's muscle skill purchase
     }
 }

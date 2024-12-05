@@ -2,14 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ZombieType
+{
+    public GameObject prefab;
+    public float spawnProbability;
+}
+
+[System.Serializable]
+public class LevelZombieConfig
+{
+    public ZombieType[] availableZombies;
+    public int zombieSpawnCount;
+    public float spawnDelay;
+}
+
 public class ZombieSpawner : MonoBehaviour
 {
-    public GameObject normalZombiePrefab;
-    public GameObject eliteZombiePrefab;
-    public GameObject bossZombiePrefab;
+    public GameObject bossPrefab;
+    public int levelNumber;
 
-    public float spawnDelay;
-    public int zombieSpawnCount;
+    public LevelZombieConfig[] levelConfigs;
+    private LevelZombieConfig currentLevelConfig;
+
     public Vector2 spawnAreaSize = new Vector2(5f, 5f);
 
     void Start()
@@ -17,87 +32,51 @@ public class ZombieSpawner : MonoBehaviour
         StartCoroutine(SpawnZombies());
     }
 
-    void Update()
-    {
-        
-    }
-
     private IEnumerator SpawnZombies()
     {
         while (!GameController.instance.isGameOver)
         {
-            for (int i = 0; i < zombieSpawnCount; i++)
+            currentLevelConfig = levelConfigs[GameController.instance.level - 1];
+
+            if (GameController.instance.isBossLevel && GameController.instance.level >= levelNumber)
             {
                 Vector2 spawnPosition = transform.position + new Vector3(Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), Random.Range(-spawnAreaSize.y / 2, spawnAreaSize.y / 2), 0);
-                Instantiate(normalZombiePrefab, spawnPosition, Quaternion.identity);
+                Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
             }
-
-            yield return new WaitForSeconds(spawnDelay);
-
-            SetSpawnParameters();
+            else
+            {
+                for (int i = 0; i < currentLevelConfig.zombieSpawnCount; i++)
+                {
+                    Vector2 spawnPosition = transform.position + new Vector3(Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), Random.Range(-spawnAreaSize.y / 2, spawnAreaSize.y / 2), 0);
+                    GameObject zombiePrefab = GetZombiePrefab(currentLevelConfig.availableZombies);
+                    Instantiate(zombiePrefab, spawnPosition, Quaternion.identity);
+                }
+            }
+            yield return new WaitForSeconds(currentLevelConfig.spawnDelay);
         }
     }
 
-    //Difficulty in every level
-    private void SetSpawnParameters()
+    private GameObject GetZombiePrefab(ZombieType[] availableZombies)
     {
-        int currentLevel = GameController.instance.level;
-
-        switch (currentLevel)
+        float totalProbability = 0f;
+        foreach (var zombie in availableZombies)
         {
-            case 1:
-                zombieSpawnCount = 2;
-                spawnDelay = 5f;
-                break;
-            case 2:
-                zombieSpawnCount = 3;
-                spawnDelay = 5f;
-                break;
-            case 3:
-                zombieSpawnCount = 4;
-                spawnDelay = 5f;
-                break;
-            case 4:
-                zombieSpawnCount = 5;
-                spawnDelay = 5f;
-                break;
-            case 5:
-                zombieSpawnCount = 6;
-                spawnDelay = 4f;
-                break;
-            case 6:
-                zombieSpawnCount = 7;
-                spawnDelay = 4f;
-                break;
-            case 7:
-                zombieSpawnCount = 8;
-                spawnDelay = 4f;
-                break;
-            case 8:
-                zombieSpawnCount = 9;
-                spawnDelay = 4f;
-                break;
-            case 9:
-                zombieSpawnCount = 10;
-                spawnDelay = 3f;
-                break;
-            case 10:
-                zombieSpawnCount = 11;
-                spawnDelay = 3f;
-                break;
-            case 11:
-                zombieSpawnCount = 12;
-                spawnDelay = 3f;
-                break;
-            case 12:
-                zombieSpawnCount = 13;
-                spawnDelay = 3f;
-                break;
-            default:
-                zombieSpawnCount = 0;
-                spawnDelay = 0f;
-                break;
+            totalProbability += zombie.spawnProbability;
         }
+
+        float randomValue = Random.Range(0f, totalProbability);
+        float cumulativeProbability = 0f;
+
+        foreach (var zombie in availableZombies)
+        {
+            cumulativeProbability += zombie.spawnProbability;
+            if (randomValue < cumulativeProbability)
+            {
+                return zombie.prefab;
+            }
+        }
+
+        return null;
     }
 
     void OnDrawGizmosSelected()

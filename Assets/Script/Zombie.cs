@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Zombie : MonoBehaviour
 {
@@ -11,6 +10,10 @@ public class Zombie : MonoBehaviour
     private Player player2;
 
     public bool isBoss = false;
+    public GameObject bulletPrefab;
+    public float bulletSpeed = 5f;
+    public float instantiateInterval = 2f;
+    private float instantiateTimer;
 
     public int hP;
 
@@ -25,7 +28,20 @@ public class Zombie : MonoBehaviour
     public int coinDrop = 1;
     public float coinDropChance = 0.5f;
 
+    public GameObject virusPrefab;
+    public int virusDrop = 1;
+    public float virusDropChance = 0.5f;
+
+    private Player attackingPlayer;
+    private float damageTimer;
+
     private Transform playerTransform;
+
+    private SpriteRenderer spriteRenderer;
+
+    private AudioSource audioSource;
+    public AudioClip hitSourceClip;
+    public AudioClip popSourceClip;
 
     void Start()
     {
@@ -42,8 +58,12 @@ public class Zombie : MonoBehaviour
             player2 = playerGameObject2.GetComponent<Player>();
         }
 
+        audioSource = GetComponent<AudioSource>();
+
         moveSpeed = moveSpeedInFast;
         changeIntervalTimer = fast;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -53,44 +73,66 @@ public class Zombie : MonoBehaviour
         if (playerTransform != null)
         {
             MoveToPlayer();
+            if (isBoss)
+            {
+                FireBullets();
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Player attackingPlayer = null;
+        if (!GameController.instance.isGameOver && !GameController.instance.isGamePause && GameController.instance.isGameInProgress)
+        {
+            attackingPlayer = GetAttackingPlayer(collision);
+            if (attackingPlayer != null)
+            {
+                if (collision.gameObject.CompareTag("Player1Sword") || collision.gameObject.CompareTag("Player1Bullet") || collision.gameObject.CompareTag("Player2Sword") || collision.gameObject.CompareTag("Player2Bullet"))
+                {
+                    hP -= attackingPlayer.attackPower;
+                    audioSource.PlayOneShot(hitSourceClip);
+                    StartCoroutine(HitEffect());
+                    ZombieDead(attackingPlayer);
+                }
+                damageTimer = 1f;
+            }
+        }
+    }
 
-        if (collision.gameObject.CompareTag("Player1Sword") || collision.gameObject.CompareTag("Player1Bullet") || (collision.gameObject.CompareTag("Player1") && player1.isMuscle))
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!GameController.instance.isGameOver && !GameController.instance.isGamePause && GameController.instance.isGameInProgress)
         {
-            attackingPlayer = player1;
+            attackingPlayer = GetAttackingPlayer(collision);
+            damageTimer += Time.deltaTime;
+            if (attackingPlayer != null && damageTimer >= 1f && (collision.gameObject.CompareTag("Player1") && player1.isMuscle || collision.gameObject.CompareTag("Player2") && player1.isMuscle) && attackingPlayer.remainingHP > 0)
+            {
+                hP -= attackingPlayer.attackPower;
+                audioSource.PlayOneShot(hitSourceClip);
+                damageTimer = 0f;
+                StartCoroutine(HitEffect());
+                ZombieDead(attackingPlayer);
+            }
         }
-        else if (collision.gameObject.CompareTag("Player2Sword") || collision.gameObject.CompareTag("Player2Bullet") || (collision.gameObject.CompareTag("Player2") && player2.isMuscle))
-        {
-            attackingPlayer = player2;
-        }
+    }
 
-        if (attackingPlayer != null)
-        {
-            hP -= attackingPlayer.attackPower;
-            ZombieDead(attackingPlayer);
-        }
+    private IEnumerator HitEffect()
+    {
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        spriteRenderer.color = Color.white;
     }
 
     void ZombieDead(Player attackingPlayer)
     {
         if (hP <= 0)
         {
-            for (int i = 0; i < coinDrop; i++)
-            {
-                float dropChance = Random.value;
-                if (dropChance <= coinDropChance)
-                {
-                    Vector2 randomOffset = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-                    Vector2 dropPosition = (Vector2)transform.position + randomOffset;
-                    Instantiate(coinPrefab, transform.position, Quaternion.identity);
-                }
-            }
-            Destroy(gameObject);
+            audioSource.PlayOneShot(popSourceClip);
+
+            DropItems(coinDrop, coinDropChance, coinPrefab);
+            DropItems(virusDrop, virusDropChance, virusPrefab);
+
+            Destroy(gameObject, popSourceClip.length);
             if (attackingPlayer == player1)
             {
                 player1.zombieKillCount++;
@@ -100,6 +142,23 @@ public class Zombie : MonoBehaviour
                 player2.zombieKillCount++;
             }
         }
+    }
+
+    void DropItems(int dropCount, float dropChance, GameObject prefab)
+    {
+        for (int i = 0; i < dropCount; i++)
+        {
+            if (Random.value <= dropChance)
+            {
+                Vector2 dropPosition = (Vector2)transform.position + GetRandomOffset();
+                Instantiate(prefab, dropPosition, Quaternion.identity);
+            }
+        }
+    }
+
+    Vector2 GetRandomOffset()
+    {
+        return new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
     }
 
     void ChangeIntervalTimer()
@@ -131,6 +190,11 @@ public class Zombie : MonoBehaviour
 
     void MoveToPlayer()
     {
+        float scale = transform.localScale.y;
+        float playerDirection = playerTransform.position.x - transform.position.x;
+
+        transform.localScale = new Vector3(playerDirection < 0 ? -scale : scale, scale, 1);
+
         if (changeIntervalTimer <= 0f)
         {
             if (moveSpeed == moveSpeedInFast)
@@ -146,5 +210,36 @@ public class Zombie : MonoBehaviour
         }
 
         transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, moveSpeed * Time.deltaTime);
+    }
+
+    void FireBullets()
+    {
+        instantiateTimer -= Time.deltaTime;
+
+        if (instantiateTimer <= 0f)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                float angle = i * 45f;
+                Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+                GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                bullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+            }
+
+            instantiateTimer = instantiateInterval;
+        }
+    }
+
+    private Player GetAttackingPlayer(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player1Sword") || collision.gameObject.CompareTag("Player1Bullet") || (collision.gameObject.CompareTag("Player1") && player1.isMuscle))
+        {
+            return player1;
+        }
+        else if (collision.gameObject.CompareTag("Player2Sword") || collision.gameObject.CompareTag("Player2Bullet") || (collision.gameObject.CompareTag("Player2") && player2.isMuscle))
+        {
+            return player2;
+        }
+        return null;
     }
 }

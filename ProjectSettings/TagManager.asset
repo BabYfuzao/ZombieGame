@@ -12,6 +12,8 @@ TagManager:
   - Player2Sword
   - Player1Bullet
   - Player2Bullet
+  - Virus
+  - ZombieBullet
   layers:
   - Default
   - TransparentFX
