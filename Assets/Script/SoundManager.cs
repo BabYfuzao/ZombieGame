@@ -11,13 +11,15 @@ public class SoundManager : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = levelBGMSourceClip;
-
-        audioSource.loop = true;
-        audioSource.Play();
     }
 
     void Update()
     {
         
+    }
+
+    public void PlayBGM()
+    {
+
     }
 }

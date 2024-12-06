@@ -10,8 +10,8 @@ public class ButtonController : MonoBehaviour
     private Player player1;
     private Player player2;
 
-    private GameObject panelTextHandleObject;
-    private PanelTextHandle panelTextHandle;
+    private GameObject panelUIHandleObject;
+    private PanelUIHandle panelUIHandle;
 
     public GameObject player1MuscleChoiceButton;
     public GameObject player1SwordChoiceButton;
@@ -37,8 +37,8 @@ public class ButtonController : MonoBehaviour
             player2 = playerGameObject2.GetComponent<Player>();
         }
 
-        panelTextHandleObject = GameObject.Find("PanelTextHandle");
-        panelTextHandle = panelTextHandleObject.GetComponent<PanelTextHandle>();
+        panelUIHandleObject = GameObject.Find("PanelUIHandle");
+        panelUIHandle = panelUIHandleObject.GetComponent<PanelUIHandle>();
     }
 
     void Update()
@@ -55,6 +55,7 @@ public class ButtonController : MonoBehaviour
         player1MuscleChoiceButton.SetActive(false);
         player1SwordChoiceButton.SetActive(false);
         player1ShooterChoiceButton.SetActive(false);
+        panelUIHandle.muscleIconForPlayer1.SetActive(true);
 
         GameController.instance.isPlayer1Choose = true;
 
@@ -70,6 +71,7 @@ public class ButtonController : MonoBehaviour
         player1MuscleChoiceButton.SetActive(false);
         player1SwordChoiceButton.SetActive(false);
         player1ShooterChoiceButton.SetActive(false);
+        panelUIHandle.swordIconForPlayer1.SetActive(true);
 
         GameController.instance.isPlayer1Choose = true;
 
@@ -85,6 +87,7 @@ public class ButtonController : MonoBehaviour
         player1MuscleChoiceButton.SetActive(false);
         player1SwordChoiceButton.SetActive(false);
         player1ShooterChoiceButton.SetActive(false);
+        panelUIHandle.shooterIconForPlayer1.SetActive(true);
 
         GameController.instance.isPlayer1Choose = true;
 
@@ -100,6 +103,7 @@ public class ButtonController : MonoBehaviour
         player2MuscleChoiceButton.SetActive(false);
         player2SwordChoiceButton.SetActive(false);
         player2ShooterChoiceButton.SetActive(false);
+        panelUIHandle.muscleIconForPlayer2.SetActive(true);
 
         GameController.instance.isPlayer2Choose = true;
 
@@ -115,6 +119,7 @@ public class ButtonController : MonoBehaviour
         player2MuscleChoiceButton.SetActive(false);
         player2SwordChoiceButton.SetActive(false);
         player2ShooterChoiceButton.SetActive(false);
+        panelUIHandle.swordIconForPlayer2.SetActive(true);
 
         GameController.instance.isPlayer2Choose = true;
 
@@ -130,6 +135,7 @@ public class ButtonController : MonoBehaviour
         player2MuscleChoiceButton.SetActive(false);
         player2SwordChoiceButton.SetActive(false);
         player2ShooterChoiceButton.SetActive(false);
+        panelUIHandle.shooterIconForPlayer2.SetActive(true);
 
         GameController.instance.isPlayer2Choose = true;
 
@@ -164,12 +170,12 @@ public class ButtonController : MonoBehaviour
 
     private void UpdateResultTextForPlayer1(string message)
     {
-        panelTextHandle.resultForPlayer1Text.text = message;
+        panelUIHandle.resultForPlayer1Text.text = message;
     }
 
     private void UpdateResultTextForPlayer2(string message)
     {
-        panelTextHandle.resultForPlayer2Text.text = message;
+        panelUIHandle.resultForPlayer2Text.text = message;
     }
 
     // Player1
