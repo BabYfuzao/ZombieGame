@@ -238,6 +238,7 @@ public class GameController : MonoBehaviour
         else if (player.isShooter)
         {
             player.moveSpeed += 2f;
+            player.attackPower -= 1;
         }
 
         player.remainingHP = player.maxHP;
