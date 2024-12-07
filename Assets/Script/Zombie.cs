@@ -194,7 +194,7 @@ public class Zombie : MonoBehaviour
         float playerDirection = playerTransform.position.x - transform.position.x;
 
         transform.localScale = new Vector3(playerDirection < 0 ? -scale : scale, scale, 1);
-
+        
         if (changeIntervalTimer <= 0f)
         {
             if (moveSpeed == moveSpeedInFast)
@@ -208,7 +208,7 @@ public class Zombie : MonoBehaviour
                 changeIntervalTimer = fast;
             }
         }
-
+        
         transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, moveSpeed * Time.deltaTime);
     }
 

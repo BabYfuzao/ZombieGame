@@ -232,6 +232,7 @@ public class GameController : MonoBehaviour
         {
             player.maxHP += 2;
             player.regenHPCD -= 3f;
+            player.attackPower += 2;
         }
 
         else if (player.isShooter)
