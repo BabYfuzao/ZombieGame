@@ -174,9 +174,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isBoss: 1
   bulletPrefab: {fileID: 137029444657090680, guid: 94cc137f7b8cc484f93550b75ed63b3b, type: 3}
-  bulletSpeed: 10
+  bulletSpeed: 5
   instantiateInterval: 2
-  hP: 60
+  hP: 100
   moveSpeed: 0
   moveSpeedInFast: 4
   moveSpeedInSlow: 0

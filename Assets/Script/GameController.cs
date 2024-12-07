@@ -14,6 +14,9 @@ public class GameController : MonoBehaviour
     private Player player1;
     private Player player2;
 
+    private GameObject[] zombieSpawnerObject;
+    private ZombieSpawner[] zombieSpawner;
+
     public TextMeshProUGUI player1ZombieKillCountText;
     public TextMeshProUGUI player2ZombieKillCountText;
 
@@ -30,6 +33,9 @@ public class GameController : MonoBehaviour
 
     public GameObject player1HPBar;
     public GameObject player2HPBar;
+
+    public bool isPlayer1Dead = false;
+    public bool isPlayer2Dead = false;
 
     public int level = 1;
     public TextMeshProUGUI levelText;
@@ -70,6 +76,18 @@ public class GameController : MonoBehaviour
         {
             player2 = playerGameObject2.GetComponent<Player>();
         }
+
+        zombieSpawnerObject = GameObject.FindGameObjectsWithTag("ZombieSpawnArea");
+        zombieSpawner = new ZombieSpawner[zombieSpawnerObject.Length];
+
+        for (int i = 0; i < zombieSpawnerObject.Length; i++)
+        {
+            if (zombieSpawnerObject[i] != null)
+            {
+                zombieSpawner[i] = zombieSpawnerObject[i].GetComponent<ZombieSpawner>();
+            }
+        }
+
 
         level = 1;
 
@@ -147,12 +165,19 @@ public class GameController : MonoBehaviour
             else if (levelCountDownTimer <= 0)
             {
                 DestroyObject();
-                if (!isGameOver)
+                if (!isGameOver && level < 12)
                 {
                     level++;
                     if (level % 4 == 0)
                     {
                         isBossLevel = true;
+                        for (int i = 0; i < zombieSpawner.Length; i++)
+                        {
+                            if (zombieSpawner[i] != null)
+                            {
+                                zombieSpawner[i].isBossSpawn = false;
+                            }
+                        }
                     }
                     else
                     {
@@ -190,21 +215,28 @@ public class GameController : MonoBehaviour
     public void FirstChoice(Player player)
     {
         player.moveSpeed = 3f;
-        player.regenHPAmount = 1;
         player.maxHP = 5;
         player.regenHPCD = 15f;
+        player.regenHPAmount = 1;
         player.attackPower = 2;
 
         if (player.isMuscle)
         {
             player.maxHP += 10;
-            player.regenHPCD -= 10f;
+            player.regenHPCD -= 12f;
+            player.regenHPAmount += 1;
             player.attackPower += 1;
         }
 
         else if (player.isSword)
         {
+            player.maxHP += 2;
             player.regenHPCD -= 3f;
+        }
+
+        else if (player.isShooter)
+        {
+            player.moveSpeed += 2f;
         }
 
         player.remainingHP = player.maxHP;
@@ -266,8 +298,12 @@ public class GameController : MonoBehaviour
         isGameInProgress = true;
         Time.timeScale = 1;
         preparePanel.SetActive(false);
+
         player1.remainingHP = player1.maxHP;
+        player1.hPSlider.value = player1.remainingHP;
+
         player2.remainingHP = player2.maxHP;
+        player2.hPSlider.value = player2.remainingHP;
 
         levelCountDownTimer = isBossLevel ? 91f : 61f;
 
@@ -277,7 +313,7 @@ public class GameController : MonoBehaviour
     //Player dead handle
     public void GameOver()
     {
-        if (player1.remainingHP <= 0 && player2.remainingHP <= 0)
+        if (isPlayer1Dead && isPlayer2Dead)
         {
             HideUI();
             losePanel.SetActive(true);
@@ -286,6 +322,7 @@ public class GameController : MonoBehaviour
 
         else if (level >= 12)
         {
+            HideUI();
             winPanel.SetActive(true);
             isGameOver = true;
         }

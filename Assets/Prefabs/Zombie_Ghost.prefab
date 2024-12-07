@@ -178,8 +178,8 @@ MonoBehaviour:
   instantiateInterval: 2
   hP: 6
   moveSpeed: 0
-  moveSpeedInFast: 2.5
-  moveSpeedInSlow: 2.5
+  moveSpeedInFast: 5
+  moveSpeedInSlow: 5
   fast: 1
   slow: 1
   coinPrefab: {fileID: 4031914487092859136, guid: 91747dcac85b3ac4dbf2322bf5f1aeaa, type: 3}

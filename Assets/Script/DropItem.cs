@@ -51,6 +51,6 @@ public class DropItem : MonoBehaviour
     bool IsPlayerInRange(Player player)
     {
         float distance = Vector2.Distance(transform.position, player.transform.position);
-        return distance <= 3f;
+        return distance <= 6f;
     }
 }

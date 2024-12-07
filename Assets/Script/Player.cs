@@ -146,6 +146,8 @@ public class Player : MonoBehaviour
                 Destroy(collision.gameObject);
                 remainingHP--;
                 hPSlider.value = remainingHP;
+                StartCoroutine(HitEffect());
+                audioSource.PlayOneShot(hitSourceClip);
             }
 
             else if (collision.gameObject.CompareTag("Coin"))
@@ -155,12 +157,13 @@ public class Player : MonoBehaviour
                 audioSource.PlayOneShot(coinSourceClip);
             }
 
-            if (!isMuscle && !isSword && !isShooter && !muscleSkill && !swordSkill && !shooterSkill)
+            if (!isMuscle || !isSword || !isShooter || !muscleSkill || !swordSkill || !shooterSkill)
             {
                 if (collision.gameObject.CompareTag("Virus"))
                 {
                     Destroy(collision.gameObject);
                     virusCount++;
+                    audioSource.PlayOneShot(coinSourceClip);
                 }
             }
         }
@@ -338,8 +341,15 @@ public class Player : MonoBehaviour
             Destroy(swordSkillObject);
             TextHandle();
             StartCoroutine(DestroyPlayerAfterDelay(5f));
+            if (playerId == 1)
+            {
+                GameController.instance.isPlayer1Dead = true;
+            }
+            else if (playerId == 2)
+            {
+                GameController.instance.isPlayer2Dead = true;
+            }
             GameController.instance.GameOver();
-            this.enabled = false;
         }
     }
 

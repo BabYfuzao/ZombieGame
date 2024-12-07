@@ -121,16 +121,16 @@ public class PanelUIHandle : MonoBehaviour
     void PreparePanelUpdate()
     {
         player1CoinCountText.gameObject.SetActive(true);
-        player1CoinCountText.text = "Coin: " + player1.coinCount.ToString();
+        player1CoinCountText.text = player1.coinCount.ToString();
 
         player2CoinCountText.gameObject.SetActive(true);
-        player2CoinCountText.text = "Coin: " + player2.coinCount.ToString();
+        player2CoinCountText.text = player2.coinCount.ToString();
 
         player1VirusCountText.gameObject.SetActive(true);
-        player1VirusCountText.text = "Virus: " + player1.virusCount.ToString();
+        player1VirusCountText.text = player1.virusCount.ToString();
 
         player2VirusCountText.gameObject.SetActive(true);
-        player2VirusCountText.text = "Virus: " + player2.virusCount.ToString();
+        player2VirusCountText.text = player2.virusCount.ToString();
     }
 
     void StatePanelUpdate()
@@ -166,7 +166,7 @@ public class PanelUIHandle : MonoBehaviour
         {
             swordIcon.SetActive(true);
             slashRadiusText.gameObject.SetActive(true);
-            slashRadiusText.text = "Slash Radius: " + player.slashRadius.ToString("F1");
+            slashRadiusText.text = "Slash Radius: " + player.slashRadius.ToString();
 
             swordSkillIcon.SetActive(player.swordSkill);
         }
@@ -181,7 +181,7 @@ public class PanelUIHandle : MonoBehaviour
         {
             shooterIcon.SetActive(true);
             shootCDText.gameObject.SetActive(true);
-            shootCDText.text = "Shoot Cooldown: " + player.shootCD.ToString("F1");
+            shootCDText.text = "Shoot Cooldown: " + player.shootCD.ToString();
 
             shooterSkillIcon.SetActive(player.shooterSkill);
         }
@@ -196,7 +196,7 @@ public class PanelUIHandle : MonoBehaviour
         {
             muscleIcon.SetActive(true);
             moveSpeedText.gameObject.SetActive(true);
-            moveSpeedText.text = "Move Speed: " + player.moveSpeed.ToString("F1");
+            moveSpeedText.text = "Move Speed: " + player.moveSpeed.ToString();
 
             muscleSkillIcon.SetActive(player.muscleSkill);
         }

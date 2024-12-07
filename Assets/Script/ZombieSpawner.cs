@@ -21,6 +21,7 @@ public class ZombieSpawner : MonoBehaviour
 {
     public GameObject bossPrefab;
     public int levelNumber;
+    public bool isBossSpawn = false;
 
     public LevelZombieConfig[] levelConfigs;
     private LevelZombieConfig currentLevelConfig;
@@ -38,10 +39,11 @@ public class ZombieSpawner : MonoBehaviour
         {
             currentLevelConfig = levelConfigs[GameController.instance.level - 1];
 
-            if (GameController.instance.isBossLevel && GameController.instance.level >= levelNumber)
+            if (GameController.instance.isBossLevel && GameController.instance.level >= levelNumber && !isBossSpawn)
             {
                 Vector2 spawnPosition = transform.position + new Vector3(Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), Random.Range(-spawnAreaSize.y / 2, spawnAreaSize.y / 2), 0);
                 Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
+                isBossSpawn = true;
             }
             else
             {
