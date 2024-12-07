@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     //Sword
     public bool isSword = false;
     public bool swordSkill = false;
+    public bool P1_AutoAttack = true;
+    public bool P2_AutoAttack = true;
 
     public GameObject swordPrefab;
     private GameObject swordObject;
@@ -99,6 +101,8 @@ public class Player : MonoBehaviour
             TextHandle();
 
             PlayerMove();
+
+            autoAttackControl();
 
             HPBarUpdate();
 
@@ -234,7 +238,7 @@ public class Player : MonoBehaviour
 
     void HPBarUpdate()
     {
-        if (hPSlider != null) // 确保 hPSlider 不为 null
+        if (hPSlider != null) // 确锟斤拷 hPSlider 锟斤拷为 null
         {
             if (hPSlider.maxValue != maxHP)
             {
@@ -273,17 +277,27 @@ public class Player : MonoBehaviour
         }
     }
 
+    void autoAttackControl()
+    {
+        if (Input.GetKeyDown(KeyCode.F)){
+            P1_AutoAttack = !P1_AutoAttack;
+        }
+        if (Input.GetKeyDown(KeyCode.RightControl)){
+            P2_AutoAttack = !P2_AutoAttack;
+        }
+    }
     //Instantiate SwordPrefab with player around to attack zombie
     void Sword()
-    {
+    {   
+        
         if (slashCDTimer < slashCD)
         {
             slashCDTimer += Time.deltaTime;
         }
 
-        KeyCode attackKey = playerId == 1 ? KeyCode.F : KeyCode.Keypad0;
+        KeyCode attackKey = playerId == 1 ? KeyCode.Space : KeyCode.RightShift;
 
-        if (swordObject == null && slashCDTimer >= slashCD && Input.GetKeyDown(attackKey))
+        if (swordObject == null && slashCDTimer >= slashCD && Input.GetKeyDown(attackKey) || (slashCDTimer >= slashCD && P1_AutoAttack))
         {
             swordObject = Instantiate(swordPrefab, transform.position, Quaternion.identity);
             Destroy(swordObject, 0.2f);
@@ -314,9 +328,9 @@ public class Player : MonoBehaviour
             shootCDTimer += Time.deltaTime;
         }
 
-        KeyCode attackKey = playerId == 1 ? KeyCode.F : KeyCode.Keypad0;
+        KeyCode attackKey = playerId == 1 ? KeyCode.Space : KeyCode.RightShift;
 
-        if (IsZombieInRange() && shootCDTimer >= shootCD && Input.GetKeyDown(attackKey))
+        if (IsZombieInRange() && shootCDTimer >= shootCD && Input.GetKeyDown(attackKey) || (P2_AutoAttack && shootCDTimer >= shootCD) )
         {
             if (shooterSkill)
             {
