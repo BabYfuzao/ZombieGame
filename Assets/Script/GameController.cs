@@ -17,6 +17,9 @@ public class GameController : MonoBehaviour
     private GameObject[] zombieSpawnerObject;
     private ZombieSpawner[] zombieSpawner;
 
+    private GameObject soundManagerObject;
+    private SoundManager soundManager;
+
     public TextMeshProUGUI player1ZombieKillCountText;
     public TextMeshProUGUI player2ZombieKillCountText;
 
@@ -77,6 +80,9 @@ public class GameController : MonoBehaviour
             player2 = playerGameObject2.GetComponent<Player>();
         }
 
+        soundManagerObject = GameObject.Find("SoundManager");
+        soundManager = soundManagerObject.GetComponent<SoundManager>();
+
         zombieSpawnerObject = GameObject.FindGameObjectsWithTag("ZombieSpawnArea");
         zombieSpawner = new ZombieSpawner[zombieSpawnerObject.Length];
 
@@ -94,6 +100,8 @@ public class GameController : MonoBehaviour
         HideUI();
 
         StartPanel();
+
+        soundManager.StartPanelPlayBGM();
 
         isGameInProgress = false;
     }
@@ -223,7 +231,7 @@ public class GameController : MonoBehaviour
         if (player.isMuscle)
         {
             player.maxHP += 10;
-            player.regenHPCD -= 12f;
+            player.regenHPCD -= 7f;
             player.regenHPAmount += 1;
             player.attackPower += 1;
         }
@@ -232,13 +240,11 @@ public class GameController : MonoBehaviour
         {
             player.maxHP += 2;
             player.regenHPCD -= 3f;
-            player.attackPower += 2;
         }
 
         else if (player.isShooter)
         {
             player.moveSpeed += 2f;
-            player.attackPower -= 1;
         }
 
         player.remainingHP = player.maxHP;
@@ -260,6 +266,8 @@ public class GameController : MonoBehaviour
         startPanel.SetActive(false);
 
         levelCountDownTimer = isBossLevel ? 91f : 61f;
+
+        soundManager.GamePlayBGM();
 
         ShowUI();
     }
@@ -320,6 +328,7 @@ public class GameController : MonoBehaviour
             HideUI();
             losePanel.SetActive(true);
             isGameOver = true;
+            soundManager.LosePlayBGM();
         }
 
         else if (level >= 12)
@@ -327,6 +336,7 @@ public class GameController : MonoBehaviour
             HideUI();
             winPanel.SetActive(true);
             isGameOver = true;
+            soundManager.WinPlayBGM();
         }
         
     }

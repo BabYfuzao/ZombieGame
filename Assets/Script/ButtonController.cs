@@ -64,6 +64,7 @@ public class ButtonController : MonoBehaviour
     public void MuscleChoiceButtonForPlayer1()
     {
         player1.isMuscle = true;
+        player1.muscleAnimation = true;
         UpdateChoiceButtons(1);
         ShowGameStartButton();
     }
@@ -71,6 +72,7 @@ public class ButtonController : MonoBehaviour
     public void SwordChoiceButtonForPlayer1()
     {
         player1.isSword = true;
+        player1.swordAnimation = true;
         UpdateChoiceButtons(1);
         ShowGameStartButton();
     }
@@ -78,6 +80,7 @@ public class ButtonController : MonoBehaviour
     public void ShooterChoiceButtonForPlayer1()
     {
         player1.isShooter = true;
+        player1.shooterAnimation = true;
         UpdateChoiceButtons(1);
         ShowGameStartButton();
     }
@@ -85,6 +88,7 @@ public class ButtonController : MonoBehaviour
     public void MuscleChoiceButtonForPlayer2()
     {
         player2.isMuscle = true;
+        player2.muscleAnimation = true;
         UpdateChoiceButtons(2);
         ShowGameStartButton();
     }
@@ -92,6 +96,7 @@ public class ButtonController : MonoBehaviour
     public void SwordChoiceButtonForPlayer2()
     {
         player2.isSword = true;
+        player2.swordAnimation = true;
         UpdateChoiceButtons(2);
         ShowGameStartButton();
     }
@@ -99,6 +104,7 @@ public class ButtonController : MonoBehaviour
     public void ShooterChoiceButtonForPlayer2()
     {
         player2.isShooter = true;
+        player2.shooterAnimation = true;
         UpdateChoiceButtons(2);
         ShowGameStartButton();
     }

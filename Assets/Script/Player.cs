@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     public Slider hPSlider;
 
     //Muscle
+    public bool muscleAnimation = false;
     public bool isMuscle = false;
     public bool muscleSkill = false;
 
@@ -38,6 +39,7 @@ public class Player : MonoBehaviour
     public GameObject explosionPrefab;
 
     //Sword
+    public bool swordAnimation = false;
     public bool isSword = false;
     public bool swordSkill = false;
 
@@ -51,6 +53,7 @@ public class Player : MonoBehaviour
     public float slashCD;
 
     //Shooter
+    public bool shooterAnimation = false;
     public bool isShooter = false;
     public bool shooterSkill = false;
 
@@ -99,7 +102,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        autoAttackStateDisplayText.text = autoAttack ? " = on" : " = off";
+        autoAttackStateDisplayText.text = autoAttack ? "on" : "off";
 
         if (remainingHP > 0 && !GameController.instance.isGameOver && !GameController.instance.isGamePause && GameController.instance.isGameInProgress)
         {
@@ -212,29 +215,88 @@ public class Player : MonoBehaviour
 
         Vector2 move = new Vector2(horizontal, vertical).normalized;
 
-        if (horizontal < -0.1f)
+        if (muscleAnimation)
         {
-            transform.localScale = new Vector3(-scale, scale, 1);
-            anim.Play($"player{playerId}_walk");
+            if (horizontal < -0.1f)
+            {
+                transform.localScale = new Vector3(-scale, scale, 1);
+                anim.Play($"player{playerId}_walk");
+            }
+            else if (horizontal > 0.1f)
+            {
+                transform.localScale = new Vector3(scale, scale, 1);
+                anim.Play($"player{playerId}_walk");
+            }
+            else if (vertical > 0.1f)
+            {
+                transform.localScale = new Vector3(scale, scale, 1);
+                anim.Play($"player{playerId}_walk");
+            }
+            else if (vertical < -0.1f)
+            {
+                transform.localScale = new Vector3(-scale, scale, 1);
+                anim.Play($"player{playerId}_walk");
+            }
+            else
+            {
+                anim.Play($"player{playerId}_idle");
+            }
         }
-        else if (horizontal > 0.1f)
+
+        else if (swordAnimation)
         {
-            transform.localScale = new Vector3(scale, scale, 1);
-            anim.Play($"player{playerId}_walk");
+            if (horizontal < -0.1f)
+            {
+                transform.localScale = new Vector3(-scale, scale, 1);
+                anim.Play($"sword{playerId}");
+            }
+            else if (horizontal > 0.1f)
+            {
+                transform.localScale = new Vector3(scale, scale, 1);
+                anim.Play($"sword{playerId}");
+            }
+            else if (vertical > 0.1f)
+            {
+                transform.localScale = new Vector3(scale, scale, 1);
+                anim.Play($"sword{playerId}");
+            }
+            else if (vertical < -0.1f)
+            {
+                transform.localScale = new Vector3(-scale, scale, 1);
+                anim.Play($"sword{playerId}");
+            }
+            else
+            {
+                anim.Play($"sword{playerId}");
+            }
         }
-        else if (vertical > 0.1f)
+
+        if (shooterAnimation)
         {
-            transform.localScale = new Vector3(scale, scale, 1);
-            anim.Play($"player{playerId}_walk");
-        }
-        else if (vertical < -0.1f)
-        {
-            transform.localScale = new Vector3(-scale, scale, 1);
-            anim.Play($"player{playerId}_walk");
-        }
-        else
-        {
-            anim.Play($"player{playerId}_idle");
+            if (horizontal < -0.1f)
+            {
+                transform.localScale = new Vector3(-scale, scale, 1);
+                anim.Play($"shooter{playerId}");
+            }
+            else if (horizontal > 0.1f)
+            {
+                transform.localScale = new Vector3(scale, scale, 1);
+                anim.Play($"shooter{playerId}");
+            }
+            else if (vertical > 0.1f)
+            {
+                transform.localScale = new Vector3(scale, scale, 1);
+                anim.Play($"shooter{playerId}");
+            }
+            else if (vertical < -0.1f)
+            {
+                transform.localScale = new Vector3(-scale, scale, 1);
+                anim.Play($"shooter{playerId}");
+            }
+            else
+            {
+                anim.Play($"shooter{playerId}");
+            }
         }
         transform.Translate(move * moveSpeed * Time.deltaTime);
     }
@@ -289,12 +351,13 @@ public class Player : MonoBehaviour
             slashCDTimer += Time.deltaTime;
         }
 
-        KeyCode attackKey = playerId == 1 ? KeyCode.Space : KeyCode.RightShift;
+        KeyCode attackKey = playerId == 1 ? KeyCode.F : KeyCode.Keypad0;
 
         if (swordObject == null && slashCDTimer >= slashCD && Input.GetKeyDown(attackKey) || (slashCDTimer >= slashCD && autoAttack))
         {
             swordObject = Instantiate(swordPrefab, transform.position, Quaternion.identity);
             Destroy(swordObject, 0.2f);
+            anim.Play($"sword_attack{playerId}");
             audioSource.PlayOneShot(slashSourceClip);
 
             slashCDTimer = 0f;
@@ -322,7 +385,7 @@ public class Player : MonoBehaviour
             shootCDTimer += Time.deltaTime;
         }
 
-        KeyCode attackKey = playerId == 1 ? KeyCode.Space : KeyCode.RightShift;
+        KeyCode attackKey = playerId == 1 ? KeyCode.F : KeyCode.Keypad0;
 
         if (IsZombieInRange() && shootCDTimer >= shootCD && Input.GetKeyDown(attackKey) || (IsZombieInRange() && shootCDTimer >= shootCD && autoAttack))
         {
