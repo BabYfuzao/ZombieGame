@@ -14,7 +14,10 @@ public class Player : MonoBehaviour
     public int coinCount;
     public int virusCount;
 
+    public bool autoAttack;
+
     public int attackPower;
+    public TextMeshProUGUI autoAttackStateDisplayText;
 
     public int remainingHP;
     public int maxHP;
@@ -25,6 +28,7 @@ public class Player : MonoBehaviour
 
     public Slider hPSlider;
 
+    //Muscle
     public bool isMuscle = false;
     public bool muscleSkill = false;
 
@@ -36,8 +40,6 @@ public class Player : MonoBehaviour
     //Sword
     public bool isSword = false;
     public bool swordSkill = false;
-    public bool P1_AutoAttack = true;
-    public bool P2_AutoAttack = true;
 
     public GameObject swordPrefab;
     private GameObject swordObject;
@@ -90,19 +92,20 @@ public class Player : MonoBehaviour
 
         remainingHP = maxHP;
         hPSlider.value = remainingHP;
+        autoAttack = false;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
+        autoAttackStateDisplayText.text = autoAttack ? " = on" : " = off";
+
         if (remainingHP > 0 && !GameController.instance.isGameOver && !GameController.instance.isGamePause && GameController.instance.isGameInProgress)
         {
             TextHandle();
 
             PlayerMove();
-
-            autoAttackControl();
 
             HPBarUpdate();
 
@@ -277,15 +280,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    void autoAttackControl()
-    {
-        if (Input.GetKeyDown(KeyCode.F)){
-            P1_AutoAttack = !P1_AutoAttack;
-        }
-        if (Input.GetKeyDown(KeyCode.RightControl)){
-            P2_AutoAttack = !P2_AutoAttack;
-        }
-    }
     //Instantiate SwordPrefab with player around to attack zombie
     void Sword()
     {   
@@ -297,7 +291,7 @@ public class Player : MonoBehaviour
 
         KeyCode attackKey = playerId == 1 ? KeyCode.Space : KeyCode.RightShift;
 
-        if (swordObject == null && slashCDTimer >= slashCD && Input.GetKeyDown(attackKey) || (slashCDTimer >= slashCD && P1_AutoAttack))
+        if (swordObject == null && slashCDTimer >= slashCD && Input.GetKeyDown(attackKey) || (slashCDTimer >= slashCD && autoAttack))
         {
             swordObject = Instantiate(swordPrefab, transform.position, Quaternion.identity);
             Destroy(swordObject, 0.2f);
@@ -330,7 +324,7 @@ public class Player : MonoBehaviour
 
         KeyCode attackKey = playerId == 1 ? KeyCode.Space : KeyCode.RightShift;
 
-        if (IsZombieInRange() && shootCDTimer >= shootCD && Input.GetKeyDown(attackKey) || (P2_AutoAttack && shootCDTimer >= shootCD) )
+        if (IsZombieInRange() && shootCDTimer >= shootCD && Input.GetKeyDown(attackKey) || (IsZombieInRange() && shootCDTimer >= shootCD && autoAttack))
         {
             if (shooterSkill)
             {

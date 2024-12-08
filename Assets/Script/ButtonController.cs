@@ -137,6 +137,16 @@ public class ButtonController : MonoBehaviour
         }
     }
 
+    public void AutoAttackControlForPlayer1()
+    {
+        player1.autoAttack = !player1.autoAttack;
+    }
+
+    public void AutoAttackControlForPlayer2()
+    {
+        player2.autoAttack = !player2.autoAttack;
+    }
+
     public void GameStartButton()
     {
         GameController.instance.GameStart();
