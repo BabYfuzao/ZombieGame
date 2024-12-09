@@ -59,6 +59,50 @@ public class ButtonController : MonoBehaviour
         }
     }
 
+    public void MuscleSkinButtonForPlayer1()
+    {
+        player1.muscleAnimation = true;
+        player1.swordAnimation = false;
+        player1.shooterAnimation = false;
+    }
+
+    public void SwordSkinButtonForPlayer1()
+    {
+        player1.muscleAnimation = false;
+        player1.swordAnimation = true;
+        player1.shooterAnimation = false;
+
+    }
+
+    public void ShooterSkinButtonForPlayer1()
+    {
+        player1.muscleAnimation = false;
+        player1.swordAnimation = false;
+        player1.shooterAnimation = true;
+    }
+
+    public void MuscleSkinButtonForPlayer2()
+    {
+        player2.muscleAnimation = true;
+        player2.swordAnimation = false;
+        player2.shooterAnimation = false;
+    }
+
+    public void SwordSkinButtonForPlayer2()
+    {
+        player2.muscleAnimation = false;
+        player2.swordAnimation = true;
+        player2.shooterAnimation = false;
+
+    }
+
+    public void ShooterSkinButtonForPlayer2()
+    {
+        player2.muscleAnimation = false;
+        player2.swordAnimation = false;
+        player2.shooterAnimation = true;
+    }
+
     //Start Panel
     //GameStart
     public void MuscleChoiceButtonForPlayer1()
