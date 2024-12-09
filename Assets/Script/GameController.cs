@@ -231,7 +231,7 @@ public class GameController : MonoBehaviour
         if (player.isMuscle)
         {
             player.maxHP += 10;
-            player.regenHPCD -= 7f;
+            player.regenHPCD -= 12f;
             player.regenHPAmount += 1;
             player.attackPower += 1;
         }
